@@ -7,8 +7,8 @@
     <ProjectGuid>{35797B8F-9407-4D0F-989C-0B4B63B9CC78}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CleaningProsthetics</RootNamespace>
-    <AssemblyName>CleaningProsthetics</AssemblyName>
+    <RootNamespace>CleaningLimbs</RootNamespace>
+    <AssemblyName>CleaningLimbs</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

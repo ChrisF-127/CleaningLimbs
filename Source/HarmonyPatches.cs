@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 using Verse;
 using Verse.AI;
 
-namespace CleaningProsthetics
+namespace CleaningLimbs
 {
 	[StaticConstructorOnStartup]
 	public static class HarmonyPatches
 	{
 		static HarmonyPatches()
 		{
-			Harmony harmony = new Harmony("syrus.cleaningprosthetics");
+			Harmony harmony = new Harmony("syrus.cleaninglimbs");
 
 			harmony.Patch(
 				typeof(JobDriver_CleanFilth).GetMethod("MakeNewToils", BindingFlags.Instance | BindingFlags.NonPublic),

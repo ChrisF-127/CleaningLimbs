@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<!-- Mop foot -->
+
+	<HediffDef ParentName="AddedBodyPartBase">
+		<defName>MopFoot</defName>
+		<label>mop foot</label>
+		<labelNoun>a mop foot</labelNoun>
+		<description>An installed mop foot.</description>
+		<descriptionHyperlinks>
+			<ThingDef>MopFoot</ThingDef>
+		</descriptionHyperlinks>
+		<addedPartProps>
+			<solid>true</solid>
+		</addedPartProps>
+		<stages>
+			<li>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>-0.05</offset>
+					</li>
+				</capMods>
+			</li>
+		</stages>
+		<spawnThingOnRemoved>MopFoot</spawnThingOnRemoved>
+	</HediffDef>
+
+	<ThingDef ParentName="BodyPartProstheticImperialBase">
+		<defName>MopFoot</defName>
+		<label>mop foot</label>
+		<description>TODO</description>
+		<descriptionHyperlinks>
+			<RecipeDef>InstallMopFoot</RecipeDef>
+		</descriptionHyperlinks>
+		<thingSetMakerTags>
+			<li>RewardStandardLowFreq</li>
+		</thingSetMakerTags>
+		<costList>
+			<Steel>60</Steel>
+			<ComponentIndustrial>8</ComponentIndustrial>
+		</costList>
+		<recipeMaker>
+			<researchPrerequisite>SpecializedLimbs</researchPrerequisite>
+		</recipeMaker>
+		<techHediffsTags>
+			<li>MopFoot</li>
+		</techHediffsTags>
+	</ThingDef>
+
+	<RecipeDef ParentName="SurgeryInstallBodyPartProstheticBase">
+		<defName>InstallMopFoot</defName>
+		<label>install mop foot</label>
+		<description>Install a mop foot.</description>
+		<descriptionHyperlinks>
+			<ThingDef>MopFoot</ThingDef>
+			<HediffDef>MopFoot</HediffDef>
+		</descriptionHyperlinks>
+		<jobString>Installing mop foot.</jobString>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>MopFoot</li>
+					</thingDefs>
+				</filter>
+				<count>1</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
+			<thingDefs>
+				<li>MopFoot</li>
+			</thingDefs>
+		</fixedIngredientFilter>
+		<appliedOnFixedBodyParts>
+			<li>Foot</li>
+		</appliedOnFixedBodyParts>
+		<addsHediff>MopFoot</addsHediff>
+	</RecipeDef>
+
+	
+	<!-- Vaccuum hand -->
+
+	<HediffDef ParentName="AddedBodyPartBase">
+		<defName>VaccuumHand</defName>
+		<label>vaccuum hand</label>
+		<labelNoun>a vaccuum hand</labelNoun>
+		<description>An installed vaccuum hand.</description>
+		<descriptionHyperlinks>
+			<ThingDef>VaccuumHand</ThingDef>
+		</descriptionHyperlinks>
+		<addedPartProps>
+			<solid>true</solid>
+		</addedPartProps>
+		<stages>
+			<li>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>-0.025</offset>
+					</li>
+				</capMods>
+			</li>
+		</stages>
+		<spawnThingOnRemoved>VaccuumHand</spawnThingOnRemoved>
+	</HediffDef>
+
+	<ThingDef ParentName="BodyPartProstheticImperialBase">
+		<defName>VaccuumHand</defName>
+		<label>vaccuum hand</label>
+		<description>TODO</description>
+		<descriptionHyperlinks>
+			<RecipeDef>InstallVaccuumHand</RecipeDef>
+		</descriptionHyperlinks>
+		<thingSetMakerTags>
+			<li>RewardStandardLowFreq</li>
+		</thingSetMakerTags>
+		<costList>
+			<Steel>60</Steel>
+			<ComponentIndustrial>8</ComponentIndustrial>
+		</costList>
+		<recipeMaker>
+			<researchPrerequisite>SpecializedLimbs</researchPrerequisite>
+		</recipeMaker>
+		<techHediffsTags>
+			<li>VaccuumHand</li>
+		</techHediffsTags>
+	</ThingDef>
+
+	<RecipeDef ParentName="SurgeryInstallBodyPartProstheticBase">
+		<defName>InstallVaccuumHand</defName>
+		<label>install vaccuum hand</label>
+		<description>Install a vaccuum hand.</description>
+		<descriptionHyperlinks>
+			<ThingDef>VaccuumHand</ThingDef>
+			<HediffDef>VaccuumHand</HediffDef>
+		</descriptionHyperlinks>
+		<jobString>Installing vaccuum hand.</jobString>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>VaccuumHand</li>
+					</thingDefs>
+				</filter>
+				<count>1</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
+			<thingDefs>
+				<li>VaccuumHand</li>
+			</thingDefs>
+		</fixedIngredientFilter>
+		<appliedOnFixedBodyParts>
+			<li>Hand</li>
+		</appliedOnFixedBodyParts>
+		<addsHediff>VaccuumHand</addsHediff>
+	</RecipeDef>
+
+</Defs>

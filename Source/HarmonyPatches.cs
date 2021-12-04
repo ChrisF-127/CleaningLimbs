@@ -47,7 +47,7 @@ namespace CleaningLimbs
 					var name = part.def.defName;
 					switch (name)
 					{
-						case "VaccuumHand":
+						case "VacuumHand":
 							hands++;
 							break;
 						case "MopFoot":
@@ -68,7 +68,7 @@ namespace CleaningLimbs
 						// base cleaning
 						filth.ThinFilth();
 
-						// vaccuum hand'ing
+						// vacuum hand'ing
 						for (int i = hands; i > 0; i--)
 						{
 							filth.ThinFilth();

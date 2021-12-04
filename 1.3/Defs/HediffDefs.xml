@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
-	<!-- Vaccuum hand -->
+	<!-- Vacuum hand -->
 
 	<HediffDef ParentName="AddedBodyPartBase">
-		<defName>VaccuumHand</defName>
-		<label>vaccuum hand</label>
-		<labelNoun>a vaccuum hand</labelNoun>
-		<description>An installed vaccuum hand.</description>
+		<defName>VacuumHand</defName>
+		<label>vacuum hand</label>
+		<labelNoun>a vacuum hand</labelNoun>
+		<description>An installed vacuum hand.</description>
 		<descriptionHyperlinks>
-			<ThingDef>VaccuumHand</ThingDef>
+			<ThingDef>VacuumHand</ThingDef>
 		</descriptionHyperlinks>
 		<addedPartProps>
 			<solid>true</solid>
@@ -24,15 +24,23 @@
 				</capMods>
 			</li>
 		</stages>
-		<spawnThingOnRemoved>VaccuumHand</spawnThingOnRemoved>
+		<spawnThingOnRemoved>VacuumHand</spawnThingOnRemoved>
 	</HediffDef>
 
 	<ThingDef ParentName="BodyPartProstheticImperialBase">
-		<defName>VaccuumHand</defName>
-		<label>vaccuum hand</label>
-		<description>TODO</description>
+		<defName>VacuumHand</defName>
+		<label>vacuum hand</label>
+		<description>A hand replacement which functions like a vacuum cleaner, thereby speeding up cleaning tasks. 
+While manipulation is not affected, the added weight reduces movement speed slightly.
+
+---
+
+As there is no stat for it cleaning speed cannot simply be increased and the actual speed improvement cannot be displayed.
+
+This body part adds another cleaning cycle to the cleaning task as well as reducing the cleaning time by 25% per hand.
+The resulting cleaning speed is approximately 250%.</description>
 		<descriptionHyperlinks>
-			<RecipeDef>InstallVaccuumHand</RecipeDef>
+			<RecipeDef>InstallVacuumHand</RecipeDef>
 		</descriptionHyperlinks>
 		<thingSetMakerTags>
 			<li>RewardStandardLowFreq</li>
@@ -45,24 +53,24 @@
 			<researchPrerequisite>SpecializedLimbs</researchPrerequisite>
 		</recipeMaker>
 		<techHediffsTags>
-			<li>VaccuumHand</li>
+			<li>VacuumHand</li>
 		</techHediffsTags>
 	</ThingDef>
 
 	<RecipeDef ParentName="SurgeryInstallBodyPartProstheticBase">
-		<defName>InstallVaccuumHand</defName>
-		<label>install vaccuum hand</label>
-		<description>Install a vaccuum hand.</description>
+		<defName>InstallVacuumHand</defName>
+		<label>install vacuum hand</label>
+		<description>Install a vacuum hand.</description>
 		<descriptionHyperlinks>
-			<ThingDef>VaccuumHand</ThingDef>
-			<HediffDef>VaccuumHand</HediffDef>
+			<ThingDef>VacuumHand</ThingDef>
+			<HediffDef>VacuumHand</HediffDef>
 		</descriptionHyperlinks>
-		<jobString>Installing vaccuum hand.</jobString>
+		<jobString>Installing vacuum hand.</jobString>
 		<ingredients>
 			<li>
 				<filter>
 					<thingDefs>
-						<li>VaccuumHand</li>
+						<li>VacuumHand</li>
 					</thingDefs>
 				</filter>
 				<count>1</count>
@@ -70,13 +78,13 @@
 		</ingredients>
 		<fixedIngredientFilter>
 			<thingDefs>
-				<li>VaccuumHand</li>
+				<li>VacuumHand</li>
 			</thingDefs>
 		</fixedIngredientFilter>
 		<appliedOnFixedBodyParts>
 			<li>Hand</li>
 		</appliedOnFixedBodyParts>
-		<addsHediff>VaccuumHand</addsHediff>
+		<addsHediff>VacuumHand</addsHediff>
 	</RecipeDef>
 
 	<!-- Mop foot -->
@@ -108,7 +116,14 @@
 	<ThingDef ParentName="BodyPartProstheticImperialBase">
 		<defName>MopFoot</defName>
 		<label>mop foot</label>
-		<description>TODO</description>
+		<description>While the name suggests a crude and disgusting attachment, this ingenious device allows the owner to swiftly clean large areas through full body motion, speeding up cleaning tasks. Having mops for feet slightly reduces movement speed though... 
+
+---
+
+As there is no stat for it cleaning speed cannot simply be increased and the actual speed improvement cannot be displayed.
+
+This body part adds a function which cleans around the current cleaning target. Two additional cleaning cycles will be executed on adjacent cleaning targets, otherwise half the remaining cleaning cycles will be executed on the current cleaning target. 
+This results in a cleaning speed of approximately 300% with adjacent targets or of 200% without them.</description>
 		<descriptionHyperlinks>
 			<RecipeDef>InstallMopFoot</RecipeDef>
 		</descriptionHyperlinks>

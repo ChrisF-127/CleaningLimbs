@@ -59,7 +59,7 @@ namespace CleaningProsthetics
 				// replace tick action
 				toil.tickAction = delegate
 				{
-					__instance.cleaningWorkDone += 1f + hands * 0.5f;
+					__instance.cleaningWorkDone += 1f + hands * 0.25f;
 					__instance.totalCleaningWorkDone += 1f;
 
 					Filth filth = __instance.Filth;
@@ -69,10 +69,10 @@ namespace CleaningProsthetics
 						filth.ThinFilth();
 
 						// vaccuum hand'ing
-						//for (int i = hands; i > 0; i--)
-						//{
-						//	filth.ThinFilth();
-						//}
+						for (int i = hands; i > 0; i--)
+						{
+							filth.ThinFilth();
+						}
 						// mop feet'ing
 						if (feet > 0)
 						{
@@ -93,7 +93,7 @@ namespace CleaningProsthetics
 			// function to clean adjacent tiles
 			void CleanAdjacent(Toil toil, Filth filth, Map map, int feet)
 			{
-				var cleans = feet/* * 2*/;
+				var cleans = feet * 2;
 				foreach (var cell in GenAdj.AdjacentCellsAround)
 				{
 					var things = (filth.positionInt + cell).GetThingList(map);

@@ -18,5 +18,7 @@
 	<loadAfter>
 		<li>brrainz.harmony</li>
 	</loadAfter>
-	<description></description>
+	<description>Adds two specialized limbs which speed up cleaning.
+
+The vacuum hand increases the speed of cleaning single piles of filth (dirt, etc.), while the mop foot speeds up areal cleaning by also cleaning adjacent filth. Both significantly improve the speed at which colonists tidy up your base.</description>
 </ModMetaData>

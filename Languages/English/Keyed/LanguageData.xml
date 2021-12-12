@@ -19,13 +19,13 @@ A single cycle may not be enough to fully clean a tile, but already speed up cle
 	<SY_CL.HandPartEfficiency>Vacuum hand: part efficiency</SY_CL.HandPartEfficiency>
 	<SY_CL.TooltipHandPartEfficiency>Adjusts the part efficiency of the vacuum hand
 (may require reloading)</SY_CL.TooltipHandPartEfficiency>
-	<SY_CL.HandPartMovementSpeed>Vacuum hand: movement speed malus</SY_CL.HandPartMovementSpeed>
-	<SY_CL.TooltipHandPartMovementSpeed>Adjusts the movement speed malus for an installed vacuum hand
-(may require reloading)</SY_CL.TooltipHandPartMovementSpeed>
+	<SY_CL.HandMovementSpeed>Vacuum hand: movement speed malus</SY_CL.HandMovementSpeed>
+	<SY_CL.TooltipHandMovementSpeed>Adjusts the movement speed malus for an installed vacuum hand
+(may require reloading)</SY_CL.TooltipHandMovementSpeed>
 
-	<SY_CL.FootEfficiency>Mop foot: part efficiency</SY_CL.FootEfficiency>
-	<SY_CL.TooltipFootEfficiency>Adjusts the part efficiency of the mop foot
-(may require reloading)</SY_CL.TooltipFootEfficiency>
+	<SY_CL.FootPartEfficiency>Mop foot: part efficiency</SY_CL.FootPartEfficiency>
+	<SY_CL.TooltipFootPartEfficiency>Adjusts the part efficiency of the mop foot
+(may require reloading)</SY_CL.TooltipFootPartEfficiency>
 	<SY_CL.FootMovementSpeed>Mop foot: movement speed malus</SY_CL.FootMovementSpeed>
 	<SY_CL.TooltipFootMovementSpeed>Adjusts the movmenet speed malus for an installed mop foot
 (may require reloading)</SY_CL.TooltipFootMovementSpeed>

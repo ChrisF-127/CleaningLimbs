@@ -12,19 +12,22 @@ namespace CleaningLimbs
 {
 	public class CleaningLimbs : HugsLib.ModBase
 	{
-		private SettingHandle<bool> _warCrimesMode;
-		public static bool WarCrimesMode = false;
-
-		private SettingHandle<float> _partMoodEffect;
-		private SettingHandle<float> _handPartEfficiency;
-		private SettingHandle<float> _footPartEfficiency;
-
 		private SettingHandle<int> _handAdditionalCleans;
 		public static int HandAdditionalCleans = 1;
 		private SettingHandle<float> _handAdditionalSpeed;
 		public static float HandAdditionalSpeed = 0.25f;
 		private SettingHandle<int> _footAdjacentCleans;
 		public static int FootAdjacentCleans = 2;
+
+		private SettingHandle<bool> _warCrimesMode;
+		public static bool WarCrimesMode = false;
+		private SettingHandle<float> _partMoodEffect;
+
+		private SettingHandle<float> _handPartEfficiency;
+		private SettingHandle<float> _handMovementSpeed;
+
+		private SettingHandle<float> _footPartEfficiency;
+		private SettingHandle<float> _footMovementSpeed;
 
 
 		public override string ModIdentifier => "CleaningLimbs";
@@ -47,12 +50,10 @@ namespace CleaningLimbs
 				2,
 				Validators.IntRangeValidator(0, 10));
 
-
 			MakeSettingWithValueChanged(
 				ref _warCrimesMode,
 				nameof(WarCrimesMode),
 				false);
-
 			MakeSetting(
 				ref _partMoodEffect,
 				"HorribleLimbsMoodEffect",
@@ -61,7 +62,6 @@ namespace CleaningLimbs
 			_partMoodEffect.ValueChanged += (value) => SetMoodEffect(ThoughtDefOfCleaningLimbs.HorribleCleaningLimbs, (SettingHandle<float>)value); 
 			SetMoodEffect(ThoughtDefOfCleaningLimbs.HorribleCleaningLimbs, _partMoodEffect);
 
-
 			MakeSetting(
 				ref _handPartEfficiency,
 				"HandPartEfficiency",
@@ -69,6 +69,13 @@ namespace CleaningLimbs
 				Validators.FloatRangeValidator(0f, 1000f));
 			_handPartEfficiency.ValueChanged += (value) => SetPartEfficiency(HediffDefOfCleaningLimbs.VacuumHand, (SettingHandle<float>)value);
 			SetPartEfficiency(HediffDefOfCleaningLimbs.VacuumHand, _handPartEfficiency);
+			MakeSetting(
+				ref _handMovementSpeed,
+				"HandMovementSpeed",
+				GetMovementSpeedCapacityModifier(HediffDefOfCleaningLimbs.VacuumHand).offset,
+				Validators.FloatRangeValidator(-1f, 1f));
+			_handMovementSpeed.ValueChanged += (value) => SetMovementSpeed(HediffDefOfCleaningLimbs.VacuumHand, (SettingHandle<float>)value);
+			SetMovementSpeed(HediffDefOfCleaningLimbs.VacuumHand, _handMovementSpeed);
 
 			MakeSetting(
 				ref _footPartEfficiency,
@@ -77,6 +84,13 @@ namespace CleaningLimbs
 				Validators.FloatRangeValidator(0f, 1000f));
 			_footPartEfficiency.ValueChanged += (value) => SetPartEfficiency(HediffDefOfCleaningLimbs.MopFoot, (SettingHandle<float>)value);
 			SetPartEfficiency(HediffDefOfCleaningLimbs.MopFoot, _footPartEfficiency);
+			MakeSetting(
+				ref _footMovementSpeed,
+				"FootMovementSpeed",
+				GetMovementSpeedCapacityModifier(HediffDefOfCleaningLimbs.MopFoot).offset,
+				Validators.FloatRangeValidator(-1f, 1f));
+			_footMovementSpeed.ValueChanged += (value) => SetMovementSpeed(HediffDefOfCleaningLimbs.MopFoot, (SettingHandle<float>)value);
+			SetMovementSpeed(HediffDefOfCleaningLimbs.MopFoot, _footMovementSpeed);
 		}
 
 		private static void SetMoodEffect(ThoughtDef thoughtDef, float value)
@@ -84,10 +98,12 @@ namespace CleaningLimbs
 			for (int i = 0; i < thoughtDef.stages.Count; i++)
 				thoughtDef.stages[i].baseMoodEffect = value * (i + 1);
 		}
-		private static void SetPartEfficiency(HediffDef hediffDef, float value)
-		{
+		private static void SetPartEfficiency(HediffDef hediffDef, float value) =>
 			hediffDef.addedPartProps.partEfficiency = value;
-		}
+		private static PawnCapacityModifier GetMovementSpeedCapacityModifier(HediffDef hediffDef) =>
+			hediffDef.stages[0].capMods.First((capMod) => capMod.capacity == PawnCapacityDefOf.Moving);
+		private static void SetMovementSpeed(HediffDef hediffDef, float value) =>
+			GetMovementSpeedCapacityModifier(hediffDef).offset = value;
 
 		private void MakeSettingWithValueChanged<T>(ref SettingHandle<T> setting, string fieldName, T defaultValue, ValueIsValid validator = null)
 		{

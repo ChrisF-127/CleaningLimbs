@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+	<SY_CL.HandAdditionalCleans>Vacuum Hand: additional cleans</SY_CL.HandAdditionalCleans>
+	<SY_CL.TooltipHandAdditionalCleans>Number of additional cleaning cycles executed per installed vacuum hand</SY_CL.TooltipHandAdditionalCleans>
+	<SY_CL.HandAdditionalSpeed>Vacuum Hand: additional work done</SY_CL.HandAdditionalSpeed>
+	<SY_CL.TooltipHandAdditionalSpeed>Cleaning is sped up through adding this value to the "work done" value. Therefore added speed increase gets lower with higher values:
+For example, if the required total work to clean a tile is 30 it takes 30 ticks to clean the tile (1 work done / tick). With an added value of 0.25 this is reduced to 24 ticks (1.25 work done / tick), 0.5 reduces it to 20, 1.0 to 15, 1.5 to 12, 2 to 10 ticks and so on.</SY_CL.TooltipHandAdditionalSpeed>
+	
+	<SY_CL.FootAdjacentCleans>Mop foot: adjacent cleans</SY_CL.FootAdjacentCleans>
+	<SY_CL.TooltipFootAdjacentCleans>Number of cleaning cycles executed on adjacent filth per installed mop foot
+A single cycle may not be enough to fully clean a tile, but already speed up cleaning greatly</SY_CL.TooltipFootAdjacentCleans>
+	
+	<SY_CL.WarCrimesMode>Cleaning limbs are horrible</SY_CL.WarCrimesMode>
+	<SY_CL.TooltipWarCrimesMode>Adds an adjustable mood debuff per installed cleaning limb if enabled</SY_CL.TooltipWarCrimesMode>
+	<SY_CL.HorribleLimbsMoodEffect>(Horrible) Mood debuff per part</SY_CL.HorribleLimbsMoodEffect>
+	<SY_CL.TooltipHorribleLimbsMoodEffect>The strength of the mood debuff per part if cleaning limbs are set to be horrible</SY_CL.TooltipHorribleLimbsMoodEffect>
+	
+	<SY_CL.HandPartEfficiency>Vacuum hand: part efficiency</SY_CL.HandPartEfficiency>
+	<SY_CL.TooltipHandPartEfficiency>Adjusts the part efficiency of the vacuum hand
+(requires reloading)</SY_CL.TooltipHandPartEfficiency>
+	<SY_CL.FootPartEfficiency>Mop foot: part efficiency</SY_CL.FootPartEfficiency>
+	<SY_CL.TooltipFootPartEfficiency>Adjusts the part efficiency of the mop foot
+(requires reloading)</SY_CL.TooltipFootPartEfficiency>
+	
+</LanguageData>

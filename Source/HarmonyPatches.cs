@@ -63,7 +63,7 @@ namespace CleaningLimbs
 				// replace tick action
 				toil.tickAction = delegate
 				{
-					__instance.cleaningWorkDone += 1f + hands * 0.25f;
+					__instance.cleaningWorkDone += 1f + hands * CleaningLimbs.HandAdditionalSpeed;
 					__instance.totalCleaningWorkDone += 1f;
 
 					Filth filth = __instance.Filth;
@@ -73,7 +73,7 @@ namespace CleaningLimbs
 						filth.ThinFilth();
 
 						// vacuum hand'ing
-						for (int i = hands; i > 0; i--)
+						for (int i = hands * CleaningLimbs.HandAdditionalCleans; i > 0; i--)
 						{
 							filth.ThinFilth();
 						}
@@ -97,7 +97,7 @@ namespace CleaningLimbs
 			// function to clean adjacent tiles
 			void CleanAdjacent(Toil toil, Map map, Filth filth, int feet)
 			{
-				var cleans = feet * 2;
+				var cleans = feet * CleaningLimbs.FootAdjacentCleans;
 				foreach (var cell in GenAdj.AdjacentCellsAround)
 				{
 					var things = (filth.positionInt + cell).GetThingList(map);
@@ -167,7 +167,7 @@ namespace CleaningLimbs
 				toil.tickAction = delegate
 				{
 					float statValue = toil.actor.GetStatValue(StatDefOf.GeneralLaborSpeed);
-					__instance.workDone += statValue + hands * 0.50f;
+					__instance.workDone += statValue + hands * CleaningLimbs.HandAdditionalSpeed * 2;
 					if (__instance.workDone >= __instance.TotalNeededWork)
 					{
 						var map = __instance.Map;
@@ -185,7 +185,7 @@ namespace CleaningLimbs
 			// function to clean adjacent tiles
 			void CleanAdjacent(Toil toil, Map map, IntVec3 center, int feet)
 			{
-				var clears = feet * 2;
+				var clears = feet * CleaningLimbs.FootAdjacentCleans;
 				foreach (var cell in GenAdj.AdjacentCellsAround)
 				{
 					var loc = center + cell;

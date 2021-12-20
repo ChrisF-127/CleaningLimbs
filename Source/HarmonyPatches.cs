@@ -26,6 +26,16 @@ namespace CleaningLimbs
 			harmony.Patch(
 				typeof(JobDriver_ClearSnow).GetMethod("MakeNewToils", BindingFlags.Instance | BindingFlags.NonPublic),
 				postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.JobDriver_ClearSnow_MakeNewToils_Postfix)));
+
+			// CleaningArea patch
+			var typeCleaningArea = Type.GetType("CleaningArea.JobDriver_CleanFilth_CleaningArea, CleaningArea");
+			if (typeCleaningArea != null)
+			{
+				Log.Message("CleaningLimbs: applying CleaningArea.JobDriver_CleanFilth_CleaningArea patch");
+				harmony.Patch(
+					typeCleaningArea.GetMethod("MakeNewToils", BindingFlags.Instance | BindingFlags.NonPublic),
+					postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.JobDriver_CleanFilth_CleaningArea_MakeNewToils_Postfix)));
+			}
 		}
 
 		static IEnumerable<Toil> JobDriver_CleanFilth_MakeNewToils_Postfix(IEnumerable<Toil> toils, JobDriver_CleanFilth __instance)
@@ -34,102 +44,121 @@ namespace CleaningLimbs
 			foreach (var toil in toils)
 			{
 				if (--c == 1) // hopefully the cleaning job will always be the second to last job in the list...
-					ReplaceCleanToilAction(toil);
+					ReplaceCleanToilAction(toil, __instance);
 				yield return toil;
 			}
-
-			// ---
-
-			// function to replace the cleaning action
-			void ReplaceCleanToilAction(Toil toil)
+		}
+		static IEnumerable<Toil> JobDriver_CleanFilth_CleaningArea_MakeNewToils_Postfix(IEnumerable<Toil> toils, JobDriver __instance)
+		{
+			int c = toils.Count();
+			foreach (var toil in toils)
 			{
-				// count number of parts ... there are probably more efficient ways to handle this
-				int hands = 0;
-				int feet = 0;
-				foreach (var part in __instance.pawn.health.hediffSet.GetHediffs<Hediff_AddedPart>())
+				if (--c == 2) // once again, hoping the jobs stays at that position
+					ReplaceCleanToilAction(toil, __instance);
+				yield return toil;
+			}
+		}
+
+		// function to replace the cleaning action
+		static void ReplaceCleanToilAction(Toil toil, JobDriver __instance)
+		{
+			// count number of parts ... there are probably more efficient ways to handle this
+			int hands = 0;
+			int feet = 0;
+			foreach (var part in __instance.pawn.health.hediffSet.GetHediffs<Hediff_AddedPart>())
+			{
+				var name = part.def.defName;
+				switch (name)
 				{
-					var name = part.def.defName;
-					switch (name)
-					{
-						case "VacuumHand":
-							hands++;
-							break;
-						case "MopFoot":
-							feet++;
-							break;
-					}
+					case "VacuumHand":
+						hands++;
+						break;
+					case "MopFoot":
+						feet++;
+						break;
 				}
-
-				// replace tick action
-				toil.tickAction = delegate
-				{
-					__instance.cleaningWorkDone += 1f + hands * CleaningLimbs.HandAdditionalSpeed;
-					__instance.totalCleaningWorkDone += 1f;
-
-					Filth filth = __instance.Filth;
-					if (__instance.cleaningWorkDone > filth.def.filth.cleaningWorkToReduceThickness)
-					{
-						// base cleaning
-						filth.ThinFilth();
-
-						// vacuum hand'ing
-						for (int i = hands * CleaningLimbs.HandAdditionalCleans; i > 0; i--)
-						{
-							filth.ThinFilth();
-						}
-						// mop feet'ing
-						if (feet > 0)
-						{
-							CleanAdjacent(toil, __instance.Map, filth, feet);
-						}
-
-						// base functionality
-						__instance.cleaningWorkDone = 0f;
-						if (filth.Destroyed)
-						{
-							toil.actor.records.Increment(RecordDefOf.MessesCleaned);
-							__instance.ReadyForNextToil();
-						}
-					}
-				};
 			}
 
-			// function to clean adjacent tiles
-			void CleanAdjacent(Toil toil, Map map, Filth filth, int feet)
+			// dirty fucking reflection because CleaningArea screws up how cleaning jobs are generated...
+			var instanceType = __instance.GetType();
+			var cleaningWorkDoneFieldInfo = instanceType.GetField("cleaningWorkDone", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+			var totalCleaningWorkDoneFieldInfo = instanceType.GetField("totalCleaningWorkDone", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+			var filthFieldInfo = instanceType.GetProperty("Filth", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
+			// replace tick action
+			toil.tickAction = delegate
 			{
-				var cleans = feet * CleaningLimbs.FootAdjacentCleans;
-				foreach (var cell in GenAdj.AdjacentCellsAround)
+				var cleaninWorkDone = (float)cleaningWorkDoneFieldInfo.GetValue(__instance);
+				var totalCleaningWorkDone = (float)totalCleaningWorkDoneFieldInfo.GetValue(__instance);
+
+				cleaninWorkDone += 1f + hands * CleaningLimbs.HandAdditionalSpeed;
+				totalCleaningWorkDone += 1f;
+
+				var filth = (Filth)filthFieldInfo.GetValue(__instance);
+				if (cleaninWorkDone > filth.def.filth.cleaningWorkToReduceThickness)
 				{
-					var things = (filth.positionInt + cell).GetThingList(map);
-					for (int i = things.Count - 1; i >= 0; i--)
+					// base cleaning
+					filth.ThinFilth();
+
+					// vacuum hand'ing
+					for (int i = hands * CleaningLimbs.HandAdditionalCleans; i > 0; i--)
 					{
-						// search for cleanable filth
-						if (things[i] is Filth adjacentFilth)
+						filth.ThinFilth();
+					}
+					// mop feet'ing
+					if (feet > 0)
+					{
+						CleanAdjacent(toil, __instance.Map, filth, feet);
+					}
+
+					// base functionality
+					cleaninWorkDone = 0f;
+					if (filth.Destroyed)
+					{
+						toil.actor.records.Increment(RecordDefOf.MessesCleaned);
+						__instance.ReadyForNextToil();
+					}
+				}
+
+				cleaningWorkDoneFieldInfo.SetValue(__instance, cleaninWorkDone);
+				totalCleaningWorkDoneFieldInfo.SetValue(__instance, totalCleaningWorkDone);
+			};
+		}
+		// function to clean adjacent tiles
+		static void CleanAdjacent(Toil toil, Map map, Filth filth, int feet)
+		{
+			var cleans = feet * CleaningLimbs.FootAdjacentCleans;
+			foreach (var cell in GenAdj.AdjacentCellsAround)
+			{
+				var things = (filth.positionInt + cell).GetThingList(map);
+				for (int i = things.Count - 1; i >= 0; i--)
+				{
+					// search for cleanable filth
+					if (things[i] is Filth adjacentFilth)
+					{
+						// clean until filth is cleaned or number of cleans is used up
+						while (!adjacentFilth.Destroyed)
 						{
-							// clean until filth is cleaned or number of cleans is used up
-							while (!adjacentFilth.Destroyed)
-							{
-								// clean adjacent filth
-								adjacentFilth.ThinFilth();
+							// clean adjacent filth
+							adjacentFilth.ThinFilth();
 
-								// increase number of messes cleaned for pawn
-								if (adjacentFilth.Destroyed)
-									toil.actor.records.Increment(RecordDefOf.MessesCleaned);
+							// increase number of messes cleaned for pawn
+							if (adjacentFilth.Destroyed)
+								toil.actor.records.Increment(RecordDefOf.MessesCleaned);
 
-								// limit to max number of cleans
-								if (--cleans == 0)
-									return;
-							}
+							// limit to max number of cleans
+							if (--cleans == 0)
+								return;
 						}
 					}
 				}
-				cleans /= 2;
+			}
+			cleans /= 2;
 
-				// clean filth at center
-				while (!filth.Destroyed && cleans-- > 0)
-				{
-					filth.ThinFilth();
-				}
+			// clean filth at center
+			while (!filth.Destroyed && cleans-- > 0)
+			{
+				filth.ThinFilth();
 			}
 		}
 

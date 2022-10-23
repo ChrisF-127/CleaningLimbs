@@ -62,22 +62,8 @@ namespace CleaningLimbs
 		// function to replace the cleaning action
 		static void ReplaceCleanToilAction(Toil toil, JobDriver __instance)
 		{
-			// count number of parts ... there are probably more efficient ways to handle this
-			int hands = 0;
-			int feet = 0;
-			foreach (var part in __instance.pawn.health.hediffSet.GetHediffs<Hediff_AddedPart>())
-			{
-				var name = part.def.defName;
-				switch (name)
-				{
-					case "VacuumHand":
-						hands++;
-						break;
-					case "MopFoot":
-						feet++;
-						break;
-				}
-			}
+			// count number of parts
+			(int hands, int feet) = CountHandsAndFeet(__instance);
 
 			// dirty fucking reflection because CleaningArea screws up how cleaning jobs are generated...
 			var instanceType = __instance.GetType();
@@ -175,22 +161,8 @@ namespace CleaningLimbs
 
 			void ReplaceCleanToilAction(Toil toil)
 			{
-				// count number of parts ... there are probably more efficient ways to handle this
-				int hands = 0;
-				int feet = 0;
-				foreach (var part in __instance.pawn.health.hediffSet.GetHediffs<Hediff_AddedPart>())
-				{
-					var name = part.def.defName;
-					switch (name)
-					{
-						case "VacuumHand":
-							hands++;
-							break;
-						case "MopFoot":
-							feet++;
-							break;
-					}
-				}
+				// count number of parts
+				(int hands, int feet) = CountHandsAndFeet(__instance);
 
 				// replace tick action
 				toil.tickAction = delegate
@@ -230,6 +202,22 @@ namespace CleaningLimbs
 					}
 				}
 			}
+		}
+
+		private static (int hands, int feet) CountHandsAndFeet(JobDriver jobDriver)
+		{
+			var list = new List<Hediff_AddedPart>();
+			jobDriver.pawn.health.hediffSet.GetHediffs(ref list);
+			int hands = 0, feet = 0;
+			foreach (var part in list)
+			{
+				var name = part.def.defName;
+				if (part.def == HediffDefOfCleaningLimbs.VacuumHand)
+					hands++;
+				else if (part.def == HediffDefOfCleaningLimbs.MopFoot)
+					feet++;
+			}
+			return (hands, feet);
 		}
 	}
 }

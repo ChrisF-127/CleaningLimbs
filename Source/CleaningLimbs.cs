@@ -16,40 +16,111 @@ namespace CleaningLimbs
 		public static int HandAdditionalCleans = 1;
 		private SettingHandle<float> _handAdditionalSpeed;
 		public static float HandAdditionalSpeed = 0.25f;
+		private SettingHandle<float> _handPartEfficiency;
+		private SettingHandle<float> _handMovementSpeed;
+
 		private SettingHandle<int> _footAdjacentCleans;
 		public static int FootAdjacentCleans = 2;
+		private SettingHandle<float> _footAdditionalSpeed;
+		public static float FootAdditionalSpeed = 0.25f;
+		private SettingHandle<float> _footPartEfficiency;
+		private SettingHandle<float> _footMovementSpeed;
 
 		private SettingHandle<bool> _warCrimesMode;
 		public static bool WarCrimesMode = false;
 		private SettingHandle<float> _partMoodEffect;
 
-		private SettingHandle<float> _handPartEfficiency;
-		private SettingHandle<float> _handMovementSpeed;
-
-		private SettingHandle<float> _footPartEfficiency;
-		private SettingHandle<float> _footMovementSpeed;
-
-
 		public override string ModIdentifier => "CleaningLimbs";
 
 		public override void DefsLoaded()
 		{
+			// Vacuum arm / hand cleaning settings
 			MakeSettingWithValueChanged(
 				ref _handAdditionalCleans,
 				nameof(HandAdditionalCleans), 
 				1, 
-				Validators.IntRangeValidator(0, 10));
+				Validators.IntRangeValidator(0, 20));
 			MakeSettingWithValueChanged(
 				ref _handAdditionalSpeed,
 				nameof(HandAdditionalSpeed),
 				0.25f,
 				Validators.FloatRangeValidator(0f, 10f));
+
+			// Vacuum arm / hand efficiency
+			MakeSetting(
+				ref _handPartEfficiency,
+				"HandPartEfficiency",
+				HediffDefOfCleaningLimbs.VacuumHand.addedPartProps.partEfficiency, // uses hand as default
+				Validators.FloatRangeValidator(0f, 1000f));
+			_handPartEfficiency.ValueChanged += value =>
+			{
+				var v = (SettingHandle<float>)value;
+				SetPartEfficiency(HediffDefOfCleaningLimbs.VacuumArm, v);
+				SetPartEfficiency(HediffDefOfCleaningLimbs.VacuumHand, v);
+			};
+			SetPartEfficiency(HediffDefOfCleaningLimbs.VacuumArm, _handPartEfficiency);
+			SetPartEfficiency(HediffDefOfCleaningLimbs.VacuumHand, _handPartEfficiency);
+
+			// Vacuum arm / hand movement speed
+			MakeSetting(
+				ref _handMovementSpeed,
+				"HandMovementSpeed",
+				GetMovementSpeedCapacityModifier(HediffDefOfCleaningLimbs.VacuumHand).offset, // uses hand as default
+				Validators.FloatRangeValidator(-1f, 1f));
+			_handMovementSpeed.ValueChanged += value =>
+			{
+				var v = (SettingHandle<float>)value;
+				SetMovementSpeed(HediffDefOfCleaningLimbs.VacuumArm, v);
+				SetMovementSpeed(HediffDefOfCleaningLimbs.VacuumHand, v);
+			};
+			SetMovementSpeed(HediffDefOfCleaningLimbs.VacuumArm, _handMovementSpeed);
+			SetMovementSpeed(HediffDefOfCleaningLimbs.VacuumHand, _handMovementSpeed);
+
+
+			// Mop leg / foot cleaning settings
 			MakeSettingWithValueChanged(
 				ref _footAdjacentCleans,
 				nameof(FootAdjacentCleans),
 				2,
-				Validators.IntRangeValidator(0, 10));
+				Validators.IntRangeValidator(0, 20));
+			MakeSettingWithValueChanged(
+				ref _footAdditionalSpeed,
+				nameof(FootAdditionalSpeed),
+				0.25f,
+				Validators.FloatRangeValidator(0f, 10f));
 
+			// Mop leg / foot efficiency
+			MakeSetting(
+				ref _footPartEfficiency,
+				"FootPartEfficiency",
+				HediffDefOfCleaningLimbs.MopFoot.addedPartProps.partEfficiency, // uses foot as default
+				Validators.FloatRangeValidator(0f, 1000f));
+			_footPartEfficiency.ValueChanged += value =>
+			{
+				var v = (SettingHandle<float>)value;
+				SetPartEfficiency(HediffDefOfCleaningLimbs.MopLeg, v);
+				SetPartEfficiency(HediffDefOfCleaningLimbs.MopFoot, v);
+			};
+			SetPartEfficiency(HediffDefOfCleaningLimbs.MopLeg, _footPartEfficiency);
+			SetPartEfficiency(HediffDefOfCleaningLimbs.MopFoot, _footPartEfficiency);
+
+			// Mop leg / foot movement speed
+			MakeSetting(
+				ref _footMovementSpeed,
+				"FootMovementSpeed",
+				GetMovementSpeedCapacityModifier(HediffDefOfCleaningLimbs.MopFoot).offset, // uses foot as default
+				Validators.FloatRangeValidator(-1f, 1f));
+			_footMovementSpeed.ValueChanged += value =>
+			{
+				var v = (SettingHandle<float>)value;
+				SetMovementSpeed(HediffDefOfCleaningLimbs.MopLeg, v);
+				SetMovementSpeed(HediffDefOfCleaningLimbs.MopFoot, v);
+			};
+			SetMovementSpeed(HediffDefOfCleaningLimbs.MopLeg, _footMovementSpeed);
+			SetMovementSpeed(HediffDefOfCleaningLimbs.MopFoot, _footMovementSpeed);
+
+
+			// War crimes mode & settings
 			MakeSettingWithValueChanged(
 				ref _warCrimesMode,
 				nameof(WarCrimesMode),
@@ -59,38 +130,8 @@ namespace CleaningLimbs
 				"HorribleLimbsMoodEffect",
 				ThoughtDefOfCleaningLimbs.HorribleCleaningLimbs.stages[0].baseMoodEffect,
 				Validators.FloatRangeValidator(-100f, 100f));
-			_partMoodEffect.ValueChanged += (value) => SetMoodEffect(ThoughtDefOfCleaningLimbs.HorribleCleaningLimbs, (SettingHandle<float>)value); 
+			_partMoodEffect.ValueChanged += value => SetMoodEffect(ThoughtDefOfCleaningLimbs.HorribleCleaningLimbs, (SettingHandle<float>)value);
 			SetMoodEffect(ThoughtDefOfCleaningLimbs.HorribleCleaningLimbs, _partMoodEffect);
-
-			MakeSetting(
-				ref _handPartEfficiency,
-				"HandPartEfficiency",
-				HediffDefOfCleaningLimbs.VacuumHand.addedPartProps.partEfficiency,
-				Validators.FloatRangeValidator(0f, 1000f));
-			_handPartEfficiency.ValueChanged += (value) => SetPartEfficiency(HediffDefOfCleaningLimbs.VacuumHand, (SettingHandle<float>)value);
-			SetPartEfficiency(HediffDefOfCleaningLimbs.VacuumHand, _handPartEfficiency);
-			MakeSetting(
-				ref _handMovementSpeed,
-				"HandMovementSpeed",
-				GetMovementSpeedCapacityModifier(HediffDefOfCleaningLimbs.VacuumHand).offset,
-				Validators.FloatRangeValidator(-1f, 1f));
-			_handMovementSpeed.ValueChanged += (value) => SetMovementSpeed(HediffDefOfCleaningLimbs.VacuumHand, (SettingHandle<float>)value);
-			SetMovementSpeed(HediffDefOfCleaningLimbs.VacuumHand, _handMovementSpeed);
-
-			MakeSetting(
-				ref _footPartEfficiency,
-				"FootPartEfficiency",
-				HediffDefOfCleaningLimbs.MopFoot.addedPartProps.partEfficiency,
-				Validators.FloatRangeValidator(0f, 1000f));
-			_footPartEfficiency.ValueChanged += (value) => SetPartEfficiency(HediffDefOfCleaningLimbs.MopFoot, (SettingHandle<float>)value);
-			SetPartEfficiency(HediffDefOfCleaningLimbs.MopFoot, _footPartEfficiency);
-			MakeSetting(
-				ref _footMovementSpeed,
-				"FootMovementSpeed",
-				GetMovementSpeedCapacityModifier(HediffDefOfCleaningLimbs.MopFoot).offset,
-				Validators.FloatRangeValidator(-1f, 1f));
-			_footMovementSpeed.ValueChanged += (value) => SetMovementSpeed(HediffDefOfCleaningLimbs.MopFoot, (SettingHandle<float>)value);
-			SetMovementSpeed(HediffDefOfCleaningLimbs.MopFoot, _footMovementSpeed);
 		}
 
 		private static void SetMoodEffect(ThoughtDef thoughtDef, float value)

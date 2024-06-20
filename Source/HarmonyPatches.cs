@@ -20,12 +20,12 @@ namespace CleaningLimbs
 			Harmony harmony = new Harmony("syrus.cleaninglimbs");
 
 			harmony.Patch(
-				typeof(JobDriver_CleanFilth).GetMethod("MakeNewToils", BindingFlags.Instance | BindingFlags.NonPublic),
-				postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.JobDriver_CleanFilth_MakeNewToils_Postfix)));
+				AccessTools.Method(typeof(JobDriver_CleanFilth), "MakeNewToils"),
+				postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(JobDriver_CleanFilth_MakeNewToils_Postfix)));
 
 			harmony.Patch(
-				typeof(JobDriver_ClearSnow).GetMethod("MakeNewToils", BindingFlags.Instance | BindingFlags.NonPublic),
-				postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.JobDriver_ClearSnow_MakeNewToils_Postfix)));
+				AccessTools.Method(typeof(JobDriver_ClearSnow), "MakeNewToils"),
+				postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(JobDriver_ClearSnow_MakeNewToils_Postfix)));
 
 			// CleaningArea patch
 			var typeCleaningArea = Type.GetType("CleaningArea.JobDriver_CleanFilth_CleaningArea, CleaningArea");
@@ -33,8 +33,8 @@ namespace CleaningLimbs
 			{
 				Log.Message("CleaningLimbs: applying CleaningArea.JobDriver_CleanFilth_CleaningArea patch");
 				harmony.Patch(
-					typeCleaningArea.GetMethod("MakeNewToils", BindingFlags.Instance | BindingFlags.NonPublic),
-					postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(HarmonyPatches.JobDriver_CleanFilth_CleaningArea_MakeNewToils_Postfix)));
+					AccessTools.Method(typeCleaningArea, "MakeNewToils"),
+					postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(JobDriver_CleanFilth_CleaningArea_MakeNewToils_Postfix)));
 			}
 		}
 
@@ -65,89 +65,105 @@ namespace CleaningLimbs
 			// count number of parts
 			(int hands, int feet) = CountHandsAndFeet(__instance);
 
-			// dirty fucking reflection because CleaningArea screws up how cleaning jobs are generated...
+			// reflection because CleaningArea screws up how cleaning jobs are generated
 			var instanceType = __instance.GetType();
-			var cleaningWorkDoneFieldInfo = instanceType.GetField("cleaningWorkDone", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-			var totalCleaningWorkDoneFieldInfo = instanceType.GetField("totalCleaningWorkDone", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-			var filthFieldInfo = instanceType.GetProperty("Filth", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+			var filthFieldInfo = AccessTools.Property(instanceType, "Filth");
+			var cleaningWorkDoneFieldInfo = AccessTools.Field(instanceType, "cleaningWorkDone");
+			var totalCleaningWorkDoneFieldInfo = AccessTools.Field(instanceType, "totalCleaningWorkDone");
 
 			// replace tick action
 			toil.tickAction = delegate
 			{
-				var cleaninWorkDone = (float)cleaningWorkDoneFieldInfo.GetValue(__instance);
-				var totalCleaningWorkDone = (float)totalCleaningWorkDoneFieldInfo.GetValue(__instance);
-
-				cleaninWorkDone += 1f + hands * CleaningLimbs.HandAdditionalSpeed;
-				totalCleaningWorkDone += 1f;
-
+				// get filth
 				var filth = (Filth)filthFieldInfo.GetValue(__instance);
-				if (cleaninWorkDone > filth.def.filth.cleaningWorkToReduceThickness)
+				// vanilla - get cleaning time factor
+				var timeFactor = filth.Position.GetTerrain(filth.Map).GetStatValueAbstract(StatDefOf.CleaningTimeFactor);
+				// get cleaning speed & calculate work done in current iteration, adding hands & feet speed boost
+				var workDone = __instance.pawn.GetStatValue(StatDefOf.CleaningSpeed) * (1f + hands * CleaningLimbs.HandAdditionalSpeed + feet * CleaningLimbs.FootAdditionalSpeed);
+
+				// vanilla - cleaning time factor
+				if (timeFactor != 0f)
+					workDone /= timeFactor;
+
+				// vanilla - get cleaning work done & add work done
+				var cleaningWorkDone = (float)cleaningWorkDoneFieldInfo.GetValue(__instance) + workDone;
+				// vanilla - get & set total cleaning work done
+				totalCleaningWorkDoneFieldInfo.SetValue(__instance, (float)totalCleaningWorkDoneFieldInfo.GetValue(__instance) + workDone);
+
+				// vanilla - insufficient work done to clean filth yet
+				if (cleaningWorkDone <= filth.def.filth.cleaningWorkToReduceThickness)
+					cleaningWorkDoneFieldInfo.SetValue(__instance, cleaningWorkDone);
+				// vanilla - sufficient work done to clean filth
+				else
 				{
-					// base cleaning
+					// vanilla - base cleaning
 					filth.ThinFilth();
 
 					// vacuum hand'ing
-					for (int i = hands * CleaningLimbs.HandAdditionalCleans; i > 0; i--)
-					{
-						filth.ThinFilth();
-					}
+					if (hands > 0)
+						cleanHere(filth);
+
 					// mop feet'ing
 					if (feet > 0)
-					{
-						CleanAdjacent(toil, __instance.Map, filth, feet);
-					}
+						cleanAdjacent(filth);
 
-					// base functionality
-					cleaninWorkDone = 0f;
+					// vanilla
+					cleaningWorkDoneFieldInfo.SetValue(__instance, 0f);
 					if (filth.Destroyed)
 					{
 						toil.actor.records.Increment(RecordDefOf.MessesCleaned);
 						__instance.ReadyForNextToil();
 					}
 				}
-
-				cleaningWorkDoneFieldInfo.SetValue(__instance, cleaninWorkDone);
-				totalCleaningWorkDoneFieldInfo.SetValue(__instance, totalCleaningWorkDone);
 			};
-		}
-		// function to clean adjacent tiles
-		static void CleanAdjacent(Toil toil, Map map, Filth filth, int feet)
-		{
-			var cleans = feet * CleaningLimbs.FootAdjacentCleans;
-			foreach (var cell in GenAdj.AdjacentCellsAround)
+
+			void cleanHere(Filth filth)
 			{
-				var things = (filth.positionInt + cell).GetThingList(map);
+				var cleans = hands * CleaningLimbs.HandAdditionalCleans;
+				// clean current tile; expending cleaning cycles on the current or additional filth
+				cleanAt(filth, filth.positionInt, ref cleans);
+			}
+			void cleanAdjacent(Filth filth)
+			{
+				var cleans = feet * CleaningLimbs.FootAdjacentCleans;
+				// clean filth from surrounding tiles
+				foreach (var cell in GenAdj.AdjacentCellsAround)
+				{
+					if (cleanAt(filth, filth.positionInt + cell, ref cleans))
+						return;
+				}
+
+				// use remaining available clean actions to clean filth at center
+				cleans /= 2;
+				while (!filth.Destroyed && cleans-- > 0)
+					filth.ThinFilth();
+			}
+			bool cleanAt(Filth filth, IntVec3 positionInt, ref int cleans)
+			{
+				var things = positionInt.GetThingList(__instance.Map);
 				for (int i = things.Count - 1; i >= 0; i--)
 				{
-					// search for cleanable filth
-					if (things[i] is Filth adjacentFilth)
+					if (!(things[i] is Filth moreFilth))
+						continue;
+					
+					// clean until filth is cleaned or number of cleans is used up
+					while (!moreFilth.Destroyed)
 					{
-						// clean until filth is cleaned or number of cleans is used up
-						while (!adjacentFilth.Destroyed)
-						{
-							// clean adjacent filth
-							adjacentFilth.ThinFilth();
+						// clean adjacent filth
+						moreFilth.ThinFilth();
 
-							// increase number of messes cleaned for pawn
-							if (adjacentFilth.Destroyed)
-								toil.actor.records.Increment(RecordDefOf.MessesCleaned);
+						// increase number of messes cleaned for pawn
+						if (moreFilth != filth && moreFilth.Destroyed)
+							toil.actor.records.Increment(RecordDefOf.MessesCleaned);
 
-							// limit to max number of cleans
-							if (--cleans == 0)
-								return;
-						}
+						// limit to max number of cleans
+						if (--cleans == 0)
+							return true;
 					}
 				}
-			}
-			cleans /= 2;
-
-			// clean filth at center
-			while (!filth.Destroyed && cleans-- > 0)
-			{
-				filth.ThinFilth();
+				return false;
 			}
 		}
-
 
 		static IEnumerable<Toil> JobDriver_ClearSnow_MakeNewToils_Postfix(IEnumerable<Toil> toils, JobDriver_ClearSnow __instance)
 		{
@@ -209,12 +225,12 @@ namespace CleaningLimbs
 			var list = new List<Hediff_AddedPart>();
 			jobDriver.pawn.health.hediffSet.GetHediffs(ref list);
 			int hands = 0, feet = 0;
-			foreach (var part in list)
+			foreach (var hediff in list)
 			{
-				var name = part.def.defName;
-				if (part.def == HediffDefOfCleaningLimbs.VacuumHand)
+				var name = hediff.def.defName;
+				if (hediff.def == HediffDefOfCleaningLimbs.VacuumArm || hediff.def == HediffDefOfCleaningLimbs.VacuumHand)
 					hands++;
-				else if (part.def == HediffDefOfCleaningLimbs.MopFoot)
+				else if (hediff.def == HediffDefOfCleaningLimbs.MopLeg || hediff.def == HediffDefOfCleaningLimbs.MopFoot)
 					feet++;
 			}
 			return (hands, feet);

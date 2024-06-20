@@ -1,6 +1,85 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Defs>
 
+	<!-- Vacuum arm -->
+
+	<HediffDef ParentName="AddedBodyPartBase">
+		<defName>VacuumArm</defName>
+		<label>vacuum arm</label>
+		<labelNoun>a vacuum arm</labelNoun>
+		<description>An installed vacuum arm.</description>
+		<descriptionHyperlinks>
+			<ThingDef>VacuumArm</ThingDef>
+		</descriptionHyperlinks>
+		<addedPartProps>
+			<solid>true</solid>
+		</addedPartProps>
+		<stages>
+			<li>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>-0.02</offset>
+					</li>
+				</capMods>
+			</li>
+		</stages>
+		<spawnThingOnRemoved>VacuumArm</spawnThingOnRemoved>
+	</HediffDef>
+
+	<ThingDef ParentName="BodyPartProstheticImperialBase">
+		<defName>VacuumArm</defName>
+		<label>vacuum arm</label>
+		<description>An arm replacement which functions like a vacuum cleaner, thereby speeding up cleaning tasks. 
+While manipulation is not affected, the added weight reduces movement speed slightly.</description>
+		<descriptionHyperlinks>
+			<RecipeDef>InstallVacuumArm</RecipeDef>
+		</descriptionHyperlinks>
+		<thingSetMakerTags>
+			<li>RewardStandardLowFreq</li>
+		</thingSetMakerTags>
+		<costList>
+			<Steel>60</Steel>
+			<ComponentIndustrial>8</ComponentIndustrial>
+		</costList>
+		<recipeMaker>
+			<researchPrerequisite>SpecializedLimbs</researchPrerequisite>
+		</recipeMaker>
+		<techHediffsTags>
+			<li>VacuumArm</li>
+		</techHediffsTags>
+	</ThingDef>
+
+	<RecipeDef ParentName="SurgeryInstallBodyPartProstheticBase">
+		<defName>InstallVacuumArm</defName>
+		<label>install vacuum arm</label>
+		<description>Install a vacuum arm.</description>
+		<descriptionHyperlinks>
+			<ThingDef>VacuumArm</ThingDef>
+			<HediffDef>VacuumArm</HediffDef>
+		</descriptionHyperlinks>
+		<jobString>Installing vacuum arm.</jobString>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>VacuumArm</li>
+					</thingDefs>
+				</filter>
+				<count>1</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
+			<thingDefs>
+				<li>VacuumArm</li>
+			</thingDefs>
+		</fixedIngredientFilter>
+		<appliedOnFixedBodyParts>
+			<li>Arm</li>
+		</appliedOnFixedBodyParts>
+		<addsHediff>VacuumArm</addsHediff>
+	</RecipeDef>
+
 	<!-- Vacuum hand -->
 
 	<HediffDef ParentName="AddedBodyPartBase">
@@ -31,14 +110,7 @@
 		<defName>VacuumHand</defName>
 		<label>vacuum hand</label>
 		<description>A hand replacement which functions like a vacuum cleaner, thereby speeding up cleaning tasks. 
-While manipulation is not affected, the added weight reduces movement speed slightly.
-
----
-
-As there is no stat for it cleaning speed cannot simply be increased and the actual speed improvement cannot be displayed.
-
-This body part adds another cleaning cycle to the cleaning task as well as reducing the cleaning time by 25% per hand.
-The resulting cleaning speed is approximately 250%.</description>
+While manipulation is not affected, the added weight reduces movement speed slightly.</description>
 		<descriptionHyperlinks>
 			<RecipeDef>InstallVacuumHand</RecipeDef>
 		</descriptionHyperlinks>
@@ -87,6 +159,84 @@ The resulting cleaning speed is approximately 250%.</description>
 		<addsHediff>VacuumHand</addsHediff>
 	</RecipeDef>
 
+	<!-- Mop leg -->
+
+	<HediffDef ParentName="AddedBodyPartBase">
+		<defName>MopLeg</defName>
+		<label>mop leg</label>
+		<labelNoun>a mop leg</labelNoun>
+		<description>An installed mop leg.</description>
+		<descriptionHyperlinks>
+			<ThingDef>MopLeg</ThingDef>
+		</descriptionHyperlinks>
+		<addedPartProps>
+			<solid>true</solid>
+		</addedPartProps>
+		<stages>
+			<li>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>-0.03</offset>
+					</li>
+				</capMods>
+			</li>
+		</stages>
+		<spawnThingOnRemoved>MopLeg</spawnThingOnRemoved>
+	</HediffDef>
+
+	<ThingDef ParentName="BodyPartProstheticImperialBase">
+		<defName>MopLeg</defName>
+		<label>mop leg</label>
+		<description>While the name suggests a crude and horrifying leg replacement, this ingenious device allows the owner to swiftly clean large areas through full body motion, speeding up cleaning tasks. Having brooms for legs slightly reduces movement speed though...</description>
+		<descriptionHyperlinks>
+			<RecipeDef>InstallMopLeg</RecipeDef>
+		</descriptionHyperlinks>
+		<thingSetMakerTags>
+			<li>RewardStandardLowFreq</li>
+		</thingSetMakerTags>
+		<costList>
+			<Steel>60</Steel>
+			<ComponentIndustrial>8</ComponentIndustrial>
+		</costList>
+		<recipeMaker>
+			<researchPrerequisite>SpecializedLimbs</researchPrerequisite>
+		</recipeMaker>
+		<techHediffsTags>
+			<li>MopLeg</li>
+		</techHediffsTags>
+	</ThingDef>
+
+	<RecipeDef ParentName="SurgeryInstallBodyPartProstheticBase">
+		<defName>InstallMopLeg</defName>
+		<label>install mop leg</label>
+		<description>Install a mop leg.</description>
+		<descriptionHyperlinks>
+			<ThingDef>MopLeg</ThingDef>
+			<HediffDef>MopLeg</HediffDef>
+		</descriptionHyperlinks>
+		<jobString>Installing mop leg.</jobString>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>MopLeg</li>
+					</thingDefs>
+				</filter>
+				<count>1</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
+			<thingDefs>
+				<li>MopLeg</li>
+			</thingDefs>
+		</fixedIngredientFilter>
+		<appliedOnFixedBodyParts>
+			<li>Leg</li>
+		</appliedOnFixedBodyParts>
+		<addsHediff>MopLeg</addsHediff>
+	</RecipeDef>
+
 	<!-- Mop foot -->
 
 	<HediffDef ParentName="AddedBodyPartBase">
@@ -116,14 +266,7 @@ The resulting cleaning speed is approximately 250%.</description>
 	<ThingDef ParentName="BodyPartProstheticImperialBase">
 		<defName>MopFoot</defName>
 		<label>mop foot</label>
-		<description>While the name suggests a crude and disgusting attachment, this ingenious device allows the owner to swiftly clean large areas through full body motion, speeding up cleaning tasks. Having mops for feet slightly reduces movement speed though... 
-
----
-
-As there is no stat for it cleaning speed cannot simply be increased and the actual speed improvement cannot be displayed.
-
-This body part adds a function which cleans around the current cleaning target. Two additional cleaning cycles will be executed on adjacent cleaning targets, otherwise half the remaining cleaning cycles will be executed on the current cleaning target. 
-This results in a cleaning speed of approximately 300% with adjacent targets or of 200% without them.</description>
+		<description>While the name suggests a crude and disgusting attachment, this ingenious device allows the owner to swiftly clean large areas through full body motion, speeding up cleaning tasks. Having mops for feet slightly reduces movement speed though...</description>
 		<descriptionHyperlinks>
 			<RecipeDef>InstallMopFoot</RecipeDef>
 		</descriptionHyperlinks>

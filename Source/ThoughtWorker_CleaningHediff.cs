@@ -19,7 +19,9 @@ namespace CleaningLimbs
 			int count = 0;
 			foreach (var hediff in p.health.hediffSet.hediffs)
 			{
-				if (hediff.def == HediffDefOfCleaningLimbs.VacuumHand
+				if (hediff.def == HediffDefOfCleaningLimbs.VacuumArm
+					|| hediff.def == HediffDefOfCleaningLimbs.VacuumHand
+					|| hediff.def == HediffDefOfCleaningLimbs.MopLeg
 					|| hediff.def == HediffDefOfCleaningLimbs.MopFoot)
 					count++;
 			}

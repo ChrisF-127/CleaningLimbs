@@ -12,7 +12,9 @@ namespace CleaningLimbs
 	internal class HediffDefOfCleaningLimbs
 	{
 #pragma warning disable 0649 // disable "never assigned to" warning
+		public static HediffDef VacuumArm;
 		public static HediffDef VacuumHand;
+		public static HediffDef MopLeg;
 		public static HediffDef MopFoot;
 #pragma warning restore 0649
 	}

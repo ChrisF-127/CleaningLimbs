@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Defs>
+
+	<!-- Vacuum arm -->
+
+	<HediffDef ParentName="AddedBodyPartBase">
+		<defName>VacuumArm</defName>
+		<label>vacuum arm</label>
+		<labelNoun>a vacuum arm</labelNoun>
+		<description>An installed vacuum arm.</description>
+		<descriptionHyperlinks>
+			<ThingDef>VacuumArm</ThingDef>
+		</descriptionHyperlinks>
+		<addedPartProps>
+			<solid>true</solid>
+		</addedPartProps>
+		<stages>
+			<li>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>-0.02</offset>
+					</li>
+				</capMods>
+			</li>
+		</stages>
+		<spawnThingOnRemoved>VacuumArm</spawnThingOnRemoved>
+	</HediffDef>
+
+	<ThingDef ParentName="BodyPartProstheticImperialBase">
+		<defName>VacuumArm</defName>
+		<label>vacuum arm</label>
+		<description>An arm replacement which functions like a vacuum cleaner, thereby speeding up cleaning tasks. 
+While manipulation is not affected, the added weight reduces movement speed slightly.</description>
+		<descriptionHyperlinks>
+			<RecipeDef>InstallVacuumArm</RecipeDef>
+		</descriptionHyperlinks>
+		<thingSetMakerTags>
+			<li>RewardStandardLowFreq</li>
+		</thingSetMakerTags>
+		<costList>
+			<Steel>60</Steel>
+			<ComponentIndustrial>8</ComponentIndustrial>
+		</costList>
+		<recipeMaker>
+			<researchPrerequisite>SpecializedLimbs</researchPrerequisite>
+		</recipeMaker>
+		<techHediffsTags>
+			<li>VacuumArm</li>
+		</techHediffsTags>
+	</ThingDef>
+
+	<RecipeDef ParentName="SurgeryInstallBodyPartProstheticBase">
+		<defName>InstallVacuumArm</defName>
+		<label>install vacuum arm</label>
+		<description>Install a vacuum arm.</description>
+		<descriptionHyperlinks>
+			<ThingDef>VacuumArm</ThingDef>
+			<HediffDef>VacuumArm</HediffDef>
+		</descriptionHyperlinks>
+		<jobString>Installing vacuum arm.</jobString>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>VacuumArm</li>
+					</thingDefs>
+				</filter>
+				<count>1</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
+			<thingDefs>
+				<li>VacuumArm</li>
+			</thingDefs>
+		</fixedIngredientFilter>
+		<appliedOnFixedBodyParts>
+			<li>Arm</li>
+		</appliedOnFixedBodyParts>
+		<addsHediff>VacuumArm</addsHediff>
+	</RecipeDef>
+
+	<!-- Vacuum hand -->
+
+	<HediffDef ParentName="AddedBodyPartBase">
+		<defName>VacuumHand</defName>
+		<label>vacuum hand</label>
+		<labelNoun>a vacuum hand</labelNoun>
+		<description>An installed vacuum hand.</description>
+		<descriptionHyperlinks>
+			<ThingDef>VacuumHand</ThingDef>
+		</descriptionHyperlinks>
+		<addedPartProps>
+			<solid>true</solid>
+		</addedPartProps>
+		<stages>
+			<li>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>-0.02</offset>
+					</li>
+				</capMods>
+			</li>
+		</stages>
+		<spawnThingOnRemoved>VacuumHand</spawnThingOnRemoved>
+	</HediffDef>
+
+	<ThingDef ParentName="BodyPartProstheticImperialBase">
+		<defName>VacuumHand</defName>
+		<label>vacuum hand</label>
+		<description>A hand replacement which functions like a vacuum cleaner, thereby speeding up cleaning tasks. 
+While manipulation is not affected, the added weight reduces movement speed slightly.</description>
+		<descriptionHyperlinks>
+			<RecipeDef>InstallVacuumHand</RecipeDef>
+		</descriptionHyperlinks>
+		<thingSetMakerTags>
+			<li>RewardStandardLowFreq</li>
+		</thingSetMakerTags>
+		<costList>
+			<Steel>60</Steel>
+			<ComponentIndustrial>8</ComponentIndustrial>
+		</costList>
+		<recipeMaker>
+			<researchPrerequisite>SpecializedLimbs</researchPrerequisite>
+		</recipeMaker>
+		<techHediffsTags>
+			<li>VacuumHand</li>
+		</techHediffsTags>
+	</ThingDef>
+
+	<RecipeDef ParentName="SurgeryInstallBodyPartProstheticBase">
+		<defName>InstallVacuumHand</defName>
+		<label>install vacuum hand</label>
+		<description>Install a vacuum hand.</description>
+		<descriptionHyperlinks>
+			<ThingDef>VacuumHand</ThingDef>
+			<HediffDef>VacuumHand</HediffDef>
+		</descriptionHyperlinks>
+		<jobString>Installing vacuum hand.</jobString>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>VacuumHand</li>
+					</thingDefs>
+				</filter>
+				<count>1</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
+			<thingDefs>
+				<li>VacuumHand</li>
+			</thingDefs>
+		</fixedIngredientFilter>
+		<appliedOnFixedBodyParts>
+			<li>Hand</li>
+		</appliedOnFixedBodyParts>
+		<addsHediff>VacuumHand</addsHediff>
+	</RecipeDef>
+
+	<!-- Mop leg -->
+
+	<HediffDef ParentName="AddedBodyPartBase">
+		<defName>MopLeg</defName>
+		<label>mop leg</label>
+		<labelNoun>a mop leg</labelNoun>
+		<description>An installed mop leg.</description>
+		<descriptionHyperlinks>
+			<ThingDef>MopLeg</ThingDef>
+		</descriptionHyperlinks>
+		<addedPartProps>
+			<solid>true</solid>
+		</addedPartProps>
+		<stages>
+			<li>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>-0.03</offset>
+					</li>
+				</capMods>
+			</li>
+		</stages>
+		<spawnThingOnRemoved>MopLeg</spawnThingOnRemoved>
+	</HediffDef>
+
+	<ThingDef ParentName="BodyPartProstheticImperialBase">
+		<defName>MopLeg</defName>
+		<label>mop leg</label>
+		<description>While the name suggests a crude and horrifying leg replacement, this ingenious device allows the owner to swiftly clean large areas through full body motion, speeding up cleaning tasks. Having brooms for legs slightly reduces movement speed though...</description>
+		<descriptionHyperlinks>
+			<RecipeDef>InstallMopLeg</RecipeDef>
+		</descriptionHyperlinks>
+		<thingSetMakerTags>
+			<li>RewardStandardLowFreq</li>
+		</thingSetMakerTags>
+		<costList>
+			<Steel>60</Steel>
+			<ComponentIndustrial>8</ComponentIndustrial>
+		</costList>
+		<recipeMaker>
+			<researchPrerequisite>SpecializedLimbs</researchPrerequisite>
+		</recipeMaker>
+		<techHediffsTags>
+			<li>MopLeg</li>
+		</techHediffsTags>
+	</ThingDef>
+
+	<RecipeDef ParentName="SurgeryInstallBodyPartProstheticBase">
+		<defName>InstallMopLeg</defName>
+		<label>install mop leg</label>
+		<description>Install a mop leg.</description>
+		<descriptionHyperlinks>
+			<ThingDef>MopLeg</ThingDef>
+			<HediffDef>MopLeg</HediffDef>
+		</descriptionHyperlinks>
+		<jobString>Installing mop leg.</jobString>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>MopLeg</li>
+					</thingDefs>
+				</filter>
+				<count>1</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
+			<thingDefs>
+				<li>MopLeg</li>
+			</thingDefs>
+		</fixedIngredientFilter>
+		<appliedOnFixedBodyParts>
+			<li>Leg</li>
+		</appliedOnFixedBodyParts>
+		<addsHediff>MopLeg</addsHediff>
+	</RecipeDef>
+
+	<!-- Mop foot -->
+
+	<HediffDef ParentName="AddedBodyPartBase">
+		<defName>MopFoot</defName>
+		<label>mop foot</label>
+		<labelNoun>a mop foot</labelNoun>
+		<description>An installed mop foot.</description>
+		<descriptionHyperlinks>
+			<ThingDef>MopFoot</ThingDef>
+		</descriptionHyperlinks>
+		<addedPartProps>
+			<solid>true</solid>
+		</addedPartProps>
+		<stages>
+			<li>
+				<capMods>
+					<li>
+						<capacity>Moving</capacity>
+						<offset>-0.03</offset>
+					</li>
+				</capMods>
+			</li>
+		</stages>
+		<spawnThingOnRemoved>MopFoot</spawnThingOnRemoved>
+	</HediffDef>
+
+	<ThingDef ParentName="BodyPartProstheticImperialBase">
+		<defName>MopFoot</defName>
+		<label>mop foot</label>
+		<description>While the name suggests a crude and disgusting attachment, this ingenious device allows the owner to swiftly clean large areas through full body motion, speeding up cleaning tasks. Having mops for feet slightly reduces movement speed though...</description>
+		<descriptionHyperlinks>
+			<RecipeDef>InstallMopFoot</RecipeDef>
+		</descriptionHyperlinks>
+		<thingSetMakerTags>
+			<li>RewardStandardLowFreq</li>
+		</thingSetMakerTags>
+		<costList>
+			<Steel>60</Steel>
+			<ComponentIndustrial>8</ComponentIndustrial>
+		</costList>
+		<recipeMaker>
+			<researchPrerequisite>SpecializedLimbs</researchPrerequisite>
+		</recipeMaker>
+		<techHediffsTags>
+			<li>MopFoot</li>
+		</techHediffsTags>
+	</ThingDef>
+
+	<RecipeDef ParentName="SurgeryInstallBodyPartProstheticBase">
+		<defName>InstallMopFoot</defName>
+		<label>install mop foot</label>
+		<description>Install a mop foot.</description>
+		<descriptionHyperlinks>
+			<ThingDef>MopFoot</ThingDef>
+			<HediffDef>MopFoot</HediffDef>
+		</descriptionHyperlinks>
+		<jobString>Installing mop foot.</jobString>
+		<ingredients>
+			<li>
+				<filter>
+					<thingDefs>
+						<li>MopFoot</li>
+					</thingDefs>
+				</filter>
+				<count>1</count>
+			</li>
+		</ingredients>
+		<fixedIngredientFilter>
+			<thingDefs>
+				<li>MopFoot</li>
+			</thingDefs>
+		</fixedIngredientFilter>
+		<appliedOnFixedBodyParts>
+			<li>Foot</li>
+		</appliedOnFixedBodyParts>
+		<addsHediff>MopFoot</addsHediff>
+	</RecipeDef>
+
+</Defs>

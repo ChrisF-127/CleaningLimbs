@@ -13,7 +13,7 @@ namespace CleaningLimbs
 	{
 		public override ThoughtState CurrentStateInternal(Pawn p)
 		{
-			if (!CleaningLimbs.WarCrimesMode)
+			if (!CleaningLimbs.Settings.WarCrimesMode)
 				return ThoughtState.Inactive;
 
 			int count = 0;

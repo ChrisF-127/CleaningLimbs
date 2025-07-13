@@ -17,15 +17,15 @@ namespace CleaningLimbs
 	{
 		static HarmonyPatches()
 		{
-			Harmony harmony = new Harmony("syrus.cleaninglimbs");
+			var harmony = new Harmony("syrus.cleaninglimbs");
 
 			harmony.Patch(
 				AccessTools.Method(typeof(JobDriver_CleanFilth), "MakeNewToils"),
 				postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(JobDriver_CleanFilth_MakeNewToils_Postfix)));
 
 			harmony.Patch(
-				AccessTools.Method(typeof(JobDriver_ClearSnow), "MakeNewToils"),
-				postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(JobDriver_ClearSnow_MakeNewToils_Postfix)));
+				AccessTools.Method(typeof(JobDriver_ClearSnowAndSand), "MakeNewToils"),
+				postfix: new HarmonyMethod(typeof(HarmonyPatches), nameof(JobDriver_ClearSnowAndSand_MakeNewToils_Postfix)));
 
 			// CleaningArea patch
 			var typeCleaningArea = Type.GetType("CleaningArea.JobDriver_CleanFilth_CleaningArea, CleaningArea");
@@ -79,7 +79,7 @@ namespace CleaningLimbs
 				// vanilla - get cleaning time factor
 				var timeFactor = filth.Position.GetTerrain(filth.Map).GetStatValueAbstract(StatDefOf.CleaningTimeFactor);
 				// get cleaning speed & calculate work done in current iteration, adding hands & feet speed boost
-				var workDone = __instance.pawn.GetStatValue(StatDefOf.CleaningSpeed) * (1f + hands * CleaningLimbs.HandAdditionalSpeed + feet * CleaningLimbs.FootAdditionalSpeed);
+				var workDone = __instance.pawn.GetStatValue(StatDefOf.CleaningSpeed) * (1f + hands * CleaningLimbs.Settings.HandAdditionalSpeed + feet * CleaningLimbs.Settings.FootAdditionalSpeed);
 
 				// vanilla - cleaning time factor
 				if (timeFactor != 0f)
@@ -119,13 +119,13 @@ namespace CleaningLimbs
 
 			void cleanHere(Filth filth)
 			{
-				var cleans = hands * CleaningLimbs.HandAdditionalCleans;
+				var cleans = hands * CleaningLimbs.Settings.HandAdditionalCleans;
 				// clean current tile; expending cleaning cycles on the current or additional filth
 				cleanAt(filth, filth.positionInt, ref cleans);
 			}
 			void cleanAdjacent(Filth filth)
 			{
-				var cleans = feet * CleaningLimbs.FootAdjacentCleans;
+				var cleans = feet * CleaningLimbs.Settings.FootAdjacentCleans;
 				// clean filth from surrounding tiles
 				foreach (var cell in GenAdj.AdjacentCellsAround)
 				{
@@ -165,7 +165,7 @@ namespace CleaningLimbs
 			}
 		}
 
-		static IEnumerable<Toil> JobDriver_ClearSnow_MakeNewToils_Postfix(IEnumerable<Toil> toils, JobDriver_ClearSnow __instance)
+		static IEnumerable<Toil> JobDriver_ClearSnowAndSand_MakeNewToils_Postfix(IEnumerable<Toil> toils, JobDriver_ClearSnowAndSand __instance)
 		{
 			int c = toils.Count();
 			foreach (var toil in toils)
@@ -184,7 +184,7 @@ namespace CleaningLimbs
 				toil.tickAction = delegate
 				{
 					float statValue = toil.actor.GetStatValue(StatDefOf.GeneralLaborSpeed);
-					__instance.workDone += statValue + hands * CleaningLimbs.HandAdditionalSpeed * 2;
+					__instance.workDone += statValue + hands * CleaningLimbs.Settings.HandAdditionalSpeed * 2;
 					if (__instance.workDone >= __instance.TotalNeededWork)
 					{
 						var map = __instance.Map;
@@ -202,7 +202,7 @@ namespace CleaningLimbs
 			// function to clean adjacent tiles
 			void CleanAdjacent(Toil toil, Map map, IntVec3 center, int feet)
 			{
-				var clears = feet * CleaningLimbs.FootAdjacentCleans;
+				var clears = feet * CleaningLimbs.Settings.FootAdjacentCleans;
 				foreach (var cell in GenAdj.AdjacentCellsAround)
 				{
 					var loc = center + cell;
